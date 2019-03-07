@@ -2025,3 +2025,18 @@ def test_ensure_file_can_write_unicode():
     p.stdout.write(u"test äöüß")
     out.seek(0)
     assert out.read().decode("utf-8") == u"test äöüß"
+
+
+def test_orig_pdb():
+    def fn():
+        set_trace()
+
+    check(fn, """
+--Return-
+[NUM] > .*fn()
+-> set_trace()
+   5 frames hidden .*
+# import pdb
+# assert pdb.orig_set_trace is pdb.pdb.set_trace
+# c
+""")
